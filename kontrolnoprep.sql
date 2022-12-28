@@ -15,93 +15,60 @@
 --SELECT * FROM outcomes;
 --SELECT * FROM battles;
 
-/*
-За всеки актьор/актриса изведете броя на различните студиа, с които са записвали филми. 
-Включете и тези, за които няма информация в кои филми са играли
-*/
+-- Р—Р° РІСЃРµРєРё Р°РєС‚СЊРѕСЂ/Р°РєС‚СЂРёСЃР° РёР·РІРµРґРµС‚Рµ Р±СЂРѕСЏ РЅР° СЂР°Р·Р»РёС‡РЅРёС‚Рµ СЃС‚СѓРґРёР°, СЃ РєРѕРёС‚Рѕ СЃР° Р·Р°РїРёСЃРІР°Р»Рё С„РёР»РјРё. Р’РєР»СЋС‡РµС‚Рµ Рё С‚РµР·Рё, Р·Р° РєРѕРёС‚Рѕ РЅСЏРјР° РёРЅС„РѕСЂРјР°С†РёСЏ РІ РєРѕРё С„РёР»РјРё СЃР° РёРіСЂР°Р»Рё
 
 USE movies;
-SELECT DISTINCT starname, COUNT(DISTINCT studioname) FROM starsin 
-LEFT JOIN movie ON movietitle = title AND movieyear = year GROUP BY starname; 
+SELECT DISTINCT starname, COUNT(DISTINCT studioname) FROM starsin LEFT JOIN movie ON movietitle = title AND movieyear = year GROUP BY starname; 
 
--- Изведете имената на актьорите, участвали в поне 3 филма след 1990 г.
+-- РР·РІРµРґРµС‚Рµ РёРјРµРЅР°С‚Р° РЅР° Р°РєС‚СЊРѕСЂРёС‚Рµ, СѓС‡Р°СЃС‚РІР°Р»Рё РІ РїРѕРЅРµ 3 С„РёР»РјР° СЃР»РµРґ 1990 Рі.
 
-SELECT starname FROM starsin JOIN movie ON movietitle = title AND movieyear = year
-WHERE movieyear > 1990 GROUP BY starname HAVING COUNT(*) >= 3;
+SELECT starname FROM starsin JOIN movie ON movietitle = title AND movieyear = year WHERE movieyear > 1990 GROUP BY starname HAVING COUNT(*) >= 3;
 
-/*
-Да се изведат различните модели компютри, подредени по цена на най-скъпия конкретен компютър 
-от даден модел
-*/
+-- Р”Р° СЃРµ РёР·РІРµРґР°С‚ СЂР°Р·Р»РёС‡РЅРёС‚Рµ РјРѕРґРµР»Рё РєРѕРјРїСЋС‚СЂРё, РїРѕРґСЂРµРґРµРЅРё РїРѕ С†РµРЅР° РЅР° РЅР°Р№-СЃРєСЉРїРёСЏ РєРѕРЅРєСЂРµС‚РµРЅ РєРѕРјРїСЋС‚СЉСЂ РѕС‚ РґР°РґРµРЅ РјРѕРґРµР»
 
 USE pc;
-SELECT DISTINCT model, price FROM pc p WHERE price = (SELECT MAX(price) FROM pc WHERE model = p.model) 
-ORDER BY price DESC;
+SELECT DISTINCT model, price FROM pc p WHERE price = (SELECT MAX(price) FROM pc WHERE model = p.model) ORDER BY price DESC;
 
-/*
-Намерете броя на потъналите американски кораби за всяка проведена битка с поне един потънал 
-американски кораб
-*/
+-- РќР°РјРµСЂРµС‚Рµ Р±СЂРѕСЏ РЅР° РїРѕС‚СЉРЅР°Р»РёС‚Рµ Р°РјРµСЂРёРєР°РЅСЃРєРё РєРѕСЂР°Р±Рё Р·Р° РІСЃСЏРєР° РїСЂРѕРІРµРґРµРЅР° Р±РёС‚РєР° СЃ РїРѕРЅРµ РµРґРёРЅ РїРѕС‚СЉРЅР°Р» Р°РјРµСЂРёРєР°РЅСЃРєРё РєРѕСЂР°Р±
 
 USE ships;
 
-SELECT battle, COUNT(ship) FROM outcomes JOIN ships ON ship = name JOIN classes ON 
-ships.class = classes.class WHERE country = 'USA' AND result = 'sunk' GROUP BY battle 
-HAVING COUNT(ship) >= 1;
+SELECT battle, COUNT(ship) FROM outcomes JOIN ships ON ship = name JOIN classes ON ships.class = classes.class WHERE country = 'USA' AND result = 'sunk' 
+GROUP BY battle HAVING COUNT(ship) >= 1;
 
--- Битките, в които са участвали поне 3 кораба на една и съща страна
+-- Р‘РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ СЃР° СѓС‡Р°СЃС‚РІР°Р»Рё РїРѕРЅРµ 3 РєРѕСЂР°Р±Р° РЅР° РµРґРЅР° Рё СЃСЉС‰Р° СЃС‚СЂР°РЅР°
 
-SELECT DISTINCT battle FROM outcomes JOIN ships ON ship = name JOIN classes ON 
-ships.class = classes.class GROUP BY battle, country HAVING COUNT(ship) >= 3;
+SELECT DISTINCT battle FROM outcomes JOIN ships ON ship = name JOIN classes ON ships.class = classes.class GROUP BY battle, country HAVING COUNT(ship) >= 3;
 
-/*
-Имената на класовете, за които няма кораб, пуснат на вода след 1921 г., но имат пуснат поне 
-един кораб
-*/
+-- РРјРµРЅР°С‚Р° РЅР° РєР»Р°СЃРѕРІРµС‚Рµ, Р·Р° РєРѕРёС‚Рѕ РЅСЏРјР° РєРѕСЂР°Р±, РїСѓСЃРЅР°С‚ РЅР° РІРѕРґР° СЃР»РµРґ 1921 Рі., РЅРѕ РёРјР°С‚ РїСѓСЃРЅР°С‚ РїРѕРЅРµ РµРґРёРЅ РєРѕСЂР°Р±
 
 SELECT class FROM ships GROUP BY class HAVING MAX(launched) <= 1921;
 
 /*
-(*) За всеки кораб броя на битките, в които е бил увреден (result = ‘damaged’). 
-Ако корабът не е участвал в битки или пък никога не е бил увреждан, в резултата да се вписва 0
+(*) Р—Р° РІСЃРµРєРё РєРѕСЂР°Р± Р±СЂРѕСЏ РЅР° Р±РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ Рµ Р±РёР» СѓРІСЂРµРґРµРЅ (result = вЂdamagedвЂ™). 
+РђРєРѕ РєРѕСЂР°Р±СЉС‚ РЅРµ Рµ СѓС‡Р°СЃС‚РІР°Р» РІ Р±РёС‚РєРё РёР»Рё РїСЉРє РЅРёРєРѕРіР° РЅРµ Рµ Р±РёР» СѓРІСЂРµР¶РґР°РЅ, РІ СЂРµР·СѓР»С‚Р°С‚Р° РґР° СЃРµ РІРїРёСЃРІР° 0
 */
 
-SELECT name, COUNT(battle) FROM ships LEFT JOIN outcomes ON name = ship AND result = 'damaged' 
-GROUP BY name;
+SELECT name, COUNT(battle) FROM ships LEFT JOIN outcomes ON name = ship AND result = 'damaged' GROUP BY name;
 
-/*
-(*) Намерете за всеки клас с поне 3 кораба броя на корабите от този клас, които са победили 
-в битка (result = 'ok')
-*/
+-- (*) РќР°РјРµСЂРµС‚Рµ Р·Р° РІСЃРµРєРё РєР»Р°СЃ СЃ РїРѕРЅРµ 3 РєРѕСЂР°Р±Р° Р±СЂРѕСЏ РЅР° РєРѕСЂР°Р±РёС‚Рµ РѕС‚ С‚РѕР·Рё РєР»Р°СЃ, РєРѕРёС‚Рѕ СЃР° РїРѕР±РµРґРёР»Рё РІ Р±РёС‚РєР° (result = 'ok')
 
-SELECT classes.class, COUNT(name) FROM classes JOIN ships ON classes.class = ships.class 
-WHERE classes.class IN (SELECT class FROM ships JOIN outcomes ON name = ship WHERE result = 'ok' 
-GROUP BY class HAVING COUNT(*) >= 3) GROUP BY classes.class; 
+SELECT classes.class, COUNT(name) FROM classes JOIN ships ON classes.class = ships.class WHERE classes.class IN (SELECT class FROM ships JOIN outcomes ON name = ship 
+WHERE result = 'ok' GROUP BY class HAVING COUNT(*) >= 3) GROUP BY classes.class; 
 
-/*
-За всяка битка да се изведе името на битката, годината на битката и броят на потъналите кораби, 
-броят на повредените кораби и броят на корабите без промяна
-*/
+-- Р—Р° РІСЃСЏРєР° Р±РёС‚РєР° РґР° СЃРµ РёР·РІРµРґРµ РёРјРµС‚Рѕ РЅР° Р±РёС‚РєР°С‚Р°, РіРѕРґРёРЅР°С‚Р° РЅР° Р±РёС‚РєР°С‚Р° Рё Р±СЂРѕСЏС‚ РЅР° РїРѕС‚СЉРЅР°Р»РёС‚Рµ РєРѕСЂР°Р±Рё, Р±СЂРѕСЏС‚ РЅР° РїРѕРІСЂРµРґРµРЅРёС‚Рµ РєРѕСЂР°Р±Рё Рё Р±СЂРѕСЏС‚ РЅР° РєРѕСЂР°Р±РёС‚Рµ Р±РµР· РїСЂРѕРјСЏРЅР°
 
-SELECT name, year(date), (SELECT COUNT(ship) FROM outcomes WHERE result = 'sunk'),
-(SELECT COUNT(ship) FROM outcomes WHERE result = 'damaged'),
-(SELECT COUNT(ship) FROM outcomes WHERE result = 'ok')
-FROM battles;
+SELECT name, year(date), (SELECT COUNT(ship) FROM outcomes WHERE result = 'sunk'), (SELECT COUNT(ship) FROM outcomes WHERE result = 'damaged'),
+(SELECT COUNT(ship) FROM outcomes WHERE result = 'ok') FROM battles;
 
-/*
-(*) Намерете имената на битките, в които са участвали поне 3 кораба с под 9 оръдия и от тях поне 
-два са с резултат ‘ok’
-*/
+-- (*) РќР°РјРµСЂРµС‚Рµ РёРјРµРЅР°С‚Р° РЅР° Р±РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ СЃР° СѓС‡Р°СЃС‚РІР°Р»Рё РїРѕРЅРµ 3 РєРѕСЂР°Р±Р° СЃ РїРѕРґ 9 РѕСЂСЉРґРёСЏ Рё РѕС‚ С‚СЏС… РїРѕРЅРµ РґРІР° СЃР° СЃ СЂРµР·СѓР»С‚Р°С‚ вЂokвЂ™
 
-SELECT battle, COUNT(ship) FROM outcomes JOIN ships ON ship = name 
-JOIN classes ON ships.class = classes.class WHERE numguns <= 9 GROUP BY battle HAVING COUNT(*) >= 3
+SELECT battle, COUNT(ship) FROM outcomes JOIN ships ON ship = name JOIN classes ON ships.class = classes.class WHERE numguns <= 9 GROUP BY battle HAVING COUNT(*) >= 3
 AND SUM(CASE result WHEN 'ok' THEN 1 ELSE 0 END) >= 2;
 
 
 
-
 -----------------------------------------------------------------------------------------
-
 
 
 
@@ -123,153 +90,111 @@ SELECT * FROM outcomes;
 SELECT * FROM battles;
 
 /*
-Без повторение заглавията и годините на всички филми, заснети преди 1982, в които е играл поне 
-един актьор (актриса), чието име не съдържа нито буквата 'k', нито 'b'. 
-Първо да се изведат най-старите филми
+Р‘РµР· РїРѕРІС‚РѕСЂРµРЅРёРµ Р·Р°РіР»Р°РІРёСЏС‚Р° Рё РіРѕРґРёРЅРёС‚Рµ РЅР° РІСЃРёС‡РєРё С„РёР»РјРё, Р·Р°СЃРЅРµС‚Рё РїСЂРµРґРё 1982, РІ РєРѕРёС‚Рѕ Рµ РёРіСЂР°Р» РїРѕРЅРµ РµРґРёРЅ Р°РєС‚СЊРѕСЂ (Р°РєС‚СЂРёСЃР°), С‡РёРµС‚Рѕ РёРјРµ РЅРµ СЃСЉРґСЉСЂР¶Р° РЅРёС‚Рѕ Р±СѓРєРІР°С‚Р° 'k', РЅРёС‚Рѕ 'b'. 
+РџСЉСЂРІРѕ РґР° СЃРµ РёР·РІРµРґР°С‚ РЅР°Р№-СЃС‚Р°СЂРёС‚Рµ С„РёР»РјРё
 */
 
 USE movies;
-SELECT DISTINCT title, year FROM movie JOIN starsin ON title = movietitle AND year = movieyear
-WHERE year = 1982 AND starname NOT LIKE '%k%' AND starname NOT LIKE '%b%' ORDER BY year;
+SELECT DISTINCT title, year FROM movie JOIN starsin ON title = movietitle AND year = movieyear WHERE year = 1982 AND starname NOT LIKE '%k%' AND starname 
+NOT LIKE '%b%' ORDER BY year;
 
 /*
-Заглавията и дължините в часове (length е в минути) на всички филми, които са от същата година, 
-от която е и филмът Terms of Endearment, но дължината им е по-малка или неизвестна
+Р—Р°РіР»Р°РІРёСЏС‚Р° Рё РґСЉР»Р¶РёРЅРёС‚Рµ РІ С‡Р°СЃРѕРІРµ (length Рµ РІ РјРёРЅСѓС‚Рё) РЅР° РІСЃРёС‡РєРё С„РёР»РјРё, РєРѕРёС‚Рѕ СЃР° РѕС‚ СЃСЉС‰Р°С‚Р° РіРѕРґРёРЅР°, РѕС‚ РєРѕСЏС‚Рѕ Рµ Рё С„РёР»РјСЉС‚ Terms of Endearment, РЅРѕ РґСЉР»Р¶РёРЅР°С‚Р° РёРј Рµ РїРѕ-РјР°Р»РєР° 
+РёР»Рё РЅРµРёР·РІРµСЃС‚РЅР°
 */
 
-SELECT title, length / 60 AS MovieLen FROM movie 
-WHERE year = (SELECT year FROM movie WHERE title = 'Terms of Endearment') 
+SELECT title, length / 60 AS MovieLen FROM movie WHERE year = (SELECT year FROM movie WHERE title = 'Terms of Endearment') 
 AND (length < (SELECT length FROM movie WHERE title = 'Terms of Endearment') OR length IS NULL);
 
+-- РРјРµРЅР°С‚Р° РЅР° РІСЃРёС‡РєРё РїСЂРѕРґСѓС†РµРЅС‚Рё, РєРѕРёС‚Рѕ СЃР° Рё С„РёР»РјРѕРІРё Р·РІРµР·РґРё Рё СЃР° РёРіСЂР°Р»Рё РІ РїРѕРЅРµ РµРґРёРЅ С„РёР»Рј РїСЂРµРґРё 1980 Рі. Рё РїРѕРЅРµ РµРґРёРЅ СЃР»РµРґ 1985 Рі
+
+SELECT name FROM movieexec JOIN movie ON cert# = producerc# WHERE name IN (SELECT starname FROM starsin) AND name IN
+(SELECT starname FROM starsin WHERE movieyear < 1980) AND name IN (SELECT starname FROM starsin WHERE movieyear > 1985);
+
+-- Р’СЃРёС‡РєРё С‡РµСЂРЅРѕ-Р±РµР»Рё С„РёР»РјРё, Р·Р°РїРёСЃР°РЅРё РїСЂРµРґРё РЅР°Р№-СЃС‚Р°СЂРёСЏ С†РІРµС‚РµРЅ С„РёР»Рј (InColor='y'/'n') РЅР° СЃСЉС‰РѕС‚Рѕ СЃС‚СѓРґРёРѕ
+
+SELECT title FROM movie WHERE year < (SELECT MIN(year) FROM movie WHERE studioname = studioname AND incolor = 'y') AND incolor = 'n';
 
 /*
-Имената на всички продуценти, които са и филмови звезди и са играли в поне един филм преди 1980 г. 
-и поне един след 1985 г
+РРјРµРЅР°С‚Р° Рё Р°РґСЂРµСЃРёС‚Рµ РЅР° СЃС‚СѓРґРёР°С‚Р°, РєРѕРёС‚Рѕ СЃР° СЂР°Р±РѕС‚РёР»Рё СЃ РїРѕ-РјР°Р»РєРѕ РѕС‚ 5 СЂР°Р·Р»РёС‡РЅРё С„РёР»РјРѕРІРё Р·РІРµР·РґРё(1). РЎС‚СѓРґРёР°, Р·Р° РєРѕРёС‚Рѕ РЅСЏРјР° РїРѕСЃРѕС‡РµРЅРё С„РёР»РјРё РёР»Рё РёРјР°, 
+РЅРѕ РЅРµ СЃРµ Р·РЅР°Рµ РєРѕРё Р°РєС‚СЊРѕСЂРё СЃР° РёРіСЂР°Р»Рё РІ С‚СЏС…, СЃСЉС‰Рѕ РґР° Р±СЉРґР°С‚ РёР·РІРµРґРµРЅРё. РџСЉСЂРІРѕ РґР° СЃРµ РёР·РІРµРґР°С‚ СЃС‚СѓРґРёР°С‚Р°, СЂР°Р±РѕС‚РёР»Рё СЃ РЅР°Р№-РјРЅРѕРіРѕ Р·РІРµР·РґРё
+(1) -> РЅР°РїСЂ. Р°РєРѕ СЃС‚СѓРґРёРѕС‚Рѕ РёРјР° РґРІР° С„РёР»РјР°, РєР°С‚Рѕ РІ РїСЉСЂРІРёСЏ СЃР° РёРіСЂР°Р»Рё A, B Рё C, Р° РІСЉРІ РІС‚РѕСЂРёСЏ - C, D Рё Р•, С‚Рѕ СЃС‚СѓРґРёРѕС‚Рѕ Рµ СЂР°Р±РѕС‚РёР»Рѕ СЃ 5 Р·РІРµР·РґРё РѕР±С‰Рѕ
 */
 
-SELECT name FROM movieexec JOIN movie ON cert# = producerc# 
-WHERE name IN (SELECT starname FROM starsin) AND 
-name IN (SELECT starname FROM starsin WHERE movieyear < 1980) AND
-name IN (SELECT starname FROM starsin WHERE movieyear > 1985);
+-- Р—Р° РІСЃРµРєРё Р°РєС‚СЊРѕСЂ/Р°РєС‚СЂРёСЃР° РёР·РІРµРґРµС‚Рµ Р±СЂРѕСЏ РЅР° СЂР°Р·Р»РёС‡РЅРёС‚Рµ СЃС‚СѓРґРёР°, СЃ РєРѕРёС‚Рѕ СЃР° Р·Р°РїРёСЃРІР°Р»Рё С„РёР»РјРё
 
--- Всички черно-бели филми, записани преди най-стария цветен филм (InColor='y'/'n') на същото студио
+SELECT starname, COUNT(DISTINCT studioname) FROM starsin JOIN movie ON movietitle = title AND movieyear = year GROUP BY starname; 
 
-SELECT title FROM movie WHERE year < (SELECT MIN(year) FROM movie 
-WHERE studioname = studioname AND incolor = 'y') AND incolor = 'n';
+-- Р—Р° РІСЃРµРєРё Р°РєС‚СЊРѕСЂ/Р°РєС‚СЂРёСЃР° РёР·РІРµРґРµС‚Рµ Р±СЂРѕСЏ РЅР° СЂР°Р·Р»РёС‡РЅРёС‚Рµ СЃС‚СѓРґРёР°, СЃ РєРѕРёС‚Рѕ СЃР° Р·Р°РїРёСЃРІР°Р»Рё С„РёР»РјРё, РІРєР»СЋС‡РёС‚РµР»РЅРѕ Рё Р·Р° С‚РµР·Рё, Р·Р° РєРѕРёС‚Рѕ РЅСЏРјР°РјРµ РёРЅС„РѕСЂРјР°С†РёСЏ РІ РєР°РєРІРё С„РёР»РјРё СЃР° РёРіСЂР°Р»Рё
 
-/*
-Имената и адресите на студиата, които са работили с по-малко от 5 различни филмови звезди(1).
-Студиа, за които няма посочени филми или има, но не се знае кои актьори са играли в тях, също
-да бъдат изведени. Първо да се изведат студиата, работили с най-много звезди
+SELECT name, COUNT(DISTINCT studioname) FROM moviestar JOIN starsin ON name = starname JOIN movie ON movietitle = title AND movieyear = year GROUP BY name;
 
-(1) -> напр. ако студиото има два филма, като в първия са играли A, B и C, а във втория - C, D и Е,
-то студиото е работило с 5 звезди общо
-*/
+-- РР·РІРµРґРµС‚Рµ РёРјРµРЅР°С‚Р° РЅР° Р°РєС‚СЊРѕСЂРёС‚Рµ, СѓС‡Р°СЃС‚РІР°Р»Рё РІ РїРѕРЅРµ 3 С„РёР»РјР° СЃР»РµРґ 1990 Рі.
 
--- За всеки актьор/актриса изведете броя на различните студиа, с които са записвали филми
+SELECT starname FROM starsin JOIN movie ON movietitle = title AND movieyear = year WHERE movieyear > 1990 GROUP BY starname HAVING COUNT(*) >= 3; 
 
-SELECT starname, COUNT(DISTINCT studioname) FROM starsin JOIN movie 
-ON movietitle = title AND movieyear = year GROUP BY starname; 
-
-
-/*
-За всеки актьор/актриса изведете броя на различните студиа, с които са записвали филми, включително 
-и за тези, за които нямаме информация в какви филми са играли
-*/
-
-SELECT name, COUNT(DISTINCT studioname) FROM moviestar 
-JOIN starsin ON name = starname JOIN movie ON movietitle = title AND movieyear = year GROUP BY name;
-
--- Изведете имената на актьорите, участвали в поне 3 филма след 1990 г.
-
-SELECT starname FROM starsin JOIN movie ON movietitle = title AND movieyear = year
-WHERE movieyear > 1990 GROUP BY starname HAVING COUNT(*) >= 3; 
-
-/*
-Да се изведат различните модели компютри, подредени по цена на най-скъпия конкретен компютър 
-от даден модел
-*/
+-- Р”Р° СЃРµ РёР·РІРµРґР°С‚ СЂР°Р·Р»РёС‡РЅРёС‚Рµ РјРѕРґРµР»Рё РєРѕРјРїСЋС‚СЂРё, РїРѕРґСЂРµРґРµРЅРё РїРѕ С†РµРЅР° РЅР° РЅР°Р№-СЃРєСЉРїРёСЏ РєРѕРЅРєСЂРµС‚РµРЅ РєРѕРјРїСЋС‚СЉСЂ РѕС‚ РґР°РґРµРЅ РјРѕРґРµР»
 
 USE pc;
 SELECT model, MAX(price) FROM pc GROUP BY model;
 
 /*
-За всеки кораб, който е от клас с име, несъдържащо буквите i и k, да се изведе името на кораба и 
-през коя година е пуснат на вода (launched). Резултатът да бъде сортиран така, че първо да се 
-извеждат най-скоро пуснатите кораби
+Р—Р° РІСЃРµРєРё РєРѕСЂР°Р±, РєРѕР№С‚Рѕ Рµ РѕС‚ РєР»Р°СЃ СЃ РёРјРµ, РЅРµСЃСЉРґСЉСЂР¶Р°С‰Рѕ Р±СѓРєРІРёС‚Рµ i Рё k, РґР° СЃРµ РёР·РІРµРґРµ РёРјРµС‚Рѕ РЅР° РєРѕСЂР°Р±Р° Рё РїСЂРµР· РєРѕСЏ РіРѕРґРёРЅР° Рµ РїСѓСЃРЅР°С‚ РЅР° РІРѕРґР° (launched). 
+Р РµР·СѓР»С‚Р°С‚СЉС‚ РґР° Р±СЉРґРµ СЃРѕСЂС‚РёСЂР°РЅ С‚Р°РєР°, С‡Рµ РїСЉСЂРІРѕ РґР° СЃРµ РёР·РІРµР¶РґР°С‚ РЅР°Р№-СЃРєРѕСЂРѕ РїСѓСЃРЅР°С‚РёС‚Рµ РєРѕСЂР°Р±Рё
 */
 
 USE ships;
 
--- Да се изведат имената на всички битки, в които е повреден (damaged) поне един японски кораб
+-- Р”Р° СЃРµ РёР·РІРµРґР°С‚ РёРјРµРЅР°С‚Р° РЅР° РІСЃРёС‡РєРё Р±РёС‚РєРё, РІ РєРѕРёС‚Рѕ Рµ РїРѕРІСЂРµРґРµРЅ (damaged) РїРѕРЅРµ РµРґРёРЅ СЏРїРѕРЅСЃРєРё РєРѕСЂР°Р±
 
-SELECT battle FROM outcomes WHERE ship IN 
-(SELECT name FROM ships JOIN classes ON ships.class = classes.class WHERE country = 'Japan') 
-AND result = 'damaged';
-
+SELECT battle FROM outcomes WHERE ship IN (SELECT name FROM ships JOIN classes ON ships.class = classes.class WHERE country = 'Japan') AND result = 'damaged';
 
 /*
-Да се изведат имената и класовете на всички кораби, пуснати на вода една година след кораба 'Rodney'
-и броят на оръдията им е по-голям от средния брой оръдия на класовете, произвеждани от тяхната страна
+Р”Р° СЃРµ РёР·РІРµРґР°С‚ РёРјРµРЅР°С‚Р° Рё РєР»Р°СЃРѕРІРµС‚Рµ РЅР° РІСЃРёС‡РєРё РєРѕСЂР°Р±Рё, РїСѓСЃРЅР°С‚Рё РЅР° РІРѕРґР° РµРґРЅР° РіРѕРґРёРЅР° СЃР»РµРґ РєРѕСЂР°Р±Р° 'Rodney' Рё Р±СЂРѕСЏС‚ РЅР° РѕСЂСЉРґРёСЏС‚Р° РёРј Рµ РїРѕ-РіРѕР»СЏРј РѕС‚ СЃСЂРµРґРЅРёСЏ Р±СЂРѕР№ РѕСЂСЉРґРёСЏ РЅР° 
+РєР»Р°СЃРѕРІРµС‚Рµ, РїСЂРѕРёР·РІРµР¶РґР°РЅРё РѕС‚ С‚СЏС…РЅР°С‚Р° СЃС‚СЂР°РЅР°
 */
 
-SELECT name, classes.class FROM ships JOIN classes ON ships.class = classes.class 
-WHERE launched >= (SELECT launched FROM ships WHERE name = 'Rodney') + 1
+SELECT name, classes.class FROM ships JOIN classes ON ships.class = classes.class WHERE launched >= (SELECT launched FROM ships WHERE name = 'Rodney') + 1
 AND numguns > (SELECT AVG(numguns) FROM classes);
 
 /*
-Да се изведат американските класове, за които всички техни кораби са пуснати на вода в рамките на 
-поне 10 години (например кораби от клас North Carolina са пускани в периода от 1911 до 1941, което 
-е повече от 10 години, докато кораби от клас Tennessee са пуснати само през 1920 и 1921 г.)
+Р”Р° СЃРµ РёР·РІРµРґР°С‚ Р°РјРµСЂРёРєР°РЅСЃРєРёС‚Рµ РєР»Р°СЃРѕРІРµ, Р·Р° РєРѕРёС‚Рѕ РІСЃРёС‡РєРё С‚РµС…РЅРё РєРѕСЂР°Р±Рё СЃР° РїСѓСЃРЅР°С‚Рё РЅР° РІРѕРґР° РІ СЂР°РјРєРёС‚Рµ РЅР° РїРѕРЅРµ 10 РіРѕРґРёРЅРё (РЅР°РїСЂРёРјРµСЂ РєРѕСЂР°Р±Рё РѕС‚ РєР»Р°СЃ North Carolina СЃР° 
+РїСѓСЃРєР°РЅРё РІ РїРµСЂРёРѕРґР° РѕС‚ 1911 РґРѕ 1941, РєРѕРµС‚Рѕ Рµ РїРѕРІРµС‡Рµ РѕС‚ 10 РіРѕРґРёРЅРё, РґРѕРєР°С‚Рѕ РєРѕСЂР°Р±Рё РѕС‚ РєР»Р°СЃ Tennessee СЃР° РїСѓСЃРЅР°С‚Рё СЃР°РјРѕ РїСЂРµР· 1920 Рё 1921 Рі.)
 */
 
-
-
 /*
-За всяка битка да се изведе средният брой кораби от една и съща държава (например в битката при 
-Guadalcanal са участвали 3 американски и един японски кораб, т.е. средният брой е 2)
+Р—Р° РІСЃСЏРєР° Р±РёС‚РєР° РґР° СЃРµ РёР·РІРµРґРµ СЃСЂРµРґРЅРёСЏС‚ Р±СЂРѕР№ РєРѕСЂР°Р±Рё РѕС‚ РµРґРЅР° Рё СЃСЉС‰Р° РґСЉСЂР¶Р°РІР° (РЅР°РїСЂРёРјРµСЂ РІ Р±РёС‚РєР°С‚Р° РїСЂРё Guadalcanal СЃР° СѓС‡Р°СЃС‚РІР°Р»Рё 3 Р°РјРµСЂРёРєР°РЅСЃРєРё Рё РµРґРёРЅ СЏРїРѕРЅСЃРєРё РєРѕСЂР°Р±, 
+С‚.Рµ. СЃСЂРµРґРЅРёСЏС‚ Р±СЂРѕР№ Рµ 2)
 */
 
 SELECT battle, COUNT(ship) FROM outcomes GROUP BY battle;
 
 /*
-За всяка държава да се изведе: броят на корабите от тази държава; броя на битките, в които е участвала;
-броя на битките, в които неин кораб е потънал ('sunk') (ако някоя отбройките е 0 – да се извежда 0)
+Р—Р° РІСЃСЏРєР° РґСЉСЂР¶Р°РІР° РґР° СЃРµ РёР·РІРµРґРµ: Р±СЂРѕСЏС‚ РЅР° РєРѕСЂР°Р±РёС‚Рµ РѕС‚ С‚Р°Р·Рё РґСЉСЂР¶Р°РІР°; Р±СЂРѕСЏ РЅР° Р±РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ Рµ СѓС‡Р°СЃС‚РІР°Р»Р°; Р±СЂРѕСЏ РЅР° Р±РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ РЅРµРёРЅ РєРѕСЂР°Р± Рµ РїРѕС‚СЉРЅР°Р» ('sunk') 
+(Р°РєРѕ РЅСЏРєРѕСЏ РѕС‚Р±СЂРѕР№РєРёС‚Рµ Рµ 0 вЂ“ РґР° СЃРµ РёР·РІРµР¶РґР° 0)
 */
 
-SELECT country, (SELECT COUNT(name) FROM ships), SUM(CASE result WHEN 'sunk' THEN 1 ELSE 0 END)
-FROM classes JOIN ships ON classes.class = ships.class JOIN outcomes ON name = ship GROUP BY country;
+SELECT country, (SELECT COUNT(name) FROM ships), SUM(CASE result WHEN 'sunk' THEN 1 ELSE 0 END) FROM classes JOIN ships ON classes.class = ships.class 
+JOIN outcomes ON name = ship GROUP BY country;
 
-/*
-Изведете броя на потъналите американски кораби за всяка проведена битка с поне един потънал 
-американски кораб
-*/
+-- РР·РІРµРґРµС‚Рµ Р±СЂРѕСЏ РЅР° РїРѕС‚СЉРЅР°Р»РёС‚Рµ Р°РјРµСЂРёРєР°РЅСЃРєРё РєРѕСЂР°Р±Рё Р·Р° РІСЃСЏРєР° РїСЂРѕРІРµРґРµРЅР° Р±РёС‚РєР° СЃ РїРѕРЅРµ РµРґРёРЅ РїРѕС‚СЉРЅР°Р» Р°РјРµСЂРёРєР°РЅСЃРєРё РєРѕСЂР°Р±
 
-SELECT battle, COUNT(ship) FROM outcomes WHERE result = 'sunk' AND ship IN 
-(SELECT name FROM ships JOIN classes ON ships.class = classes.class WHERE country = 'USA')
+SELECT battle, COUNT(ship) FROM outcomes WHERE result = 'sunk' AND ship IN (SELECT name FROM ships JOIN classes ON ships.class = classes.class WHERE country = 'USA')
 GROUP BY battle;
 
--- Битките, в които са участвали поне 3 кораба на една и съща страна
+-- Р‘РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ СЃР° СѓС‡Р°СЃС‚РІР°Р»Рё РїРѕРЅРµ 3 РєРѕСЂР°Р±Р° РЅР° РµРґРЅР° Рё СЃСЉС‰Р° СЃС‚СЂР°РЅР°
 
 SELECT battle FROM outcomes JOIN ships ON ship = name GROUP BY battle HAVING COUNT(*) >= 3; 
 
-/*
-Имената на класовете, за които няма кораб, пуснат на вода след 1921 г., но имат пуснат поне един кораб
-*/
+-- РРјРµРЅР°С‚Р° РЅР° РєР»Р°СЃРѕРІРµС‚Рµ, Р·Р° РєРѕРёС‚Рѕ РЅСЏРјР° РєРѕСЂР°Р±, РїСѓСЃРЅР°С‚ РЅР° РІРѕРґР° СЃР»РµРґ 1921 Рі., РЅРѕ РёРјР°С‚ РїСѓСЃРЅР°С‚ РїРѕРЅРµ РµРґРёРЅ РєРѕСЂР°Р±
 
 SELECT class FROM ships GROUP BY class HAVING MAX(launched) < 1921; 
 
-/*
-(*) За всеки кораб намерете броя на битките, в които е бил увреден. Ако корабът не е участвал в 
-битки или пък никога не е бил увреждан, в резултата да се вписва 0
-*/
+-- (*) Р—Р° РІСЃРµРєРё РєРѕСЂР°Р± РЅР°РјРµСЂРµС‚Рµ Р±СЂРѕСЏ РЅР° Р±РёС‚РєРёС‚Рµ, РІ РєРѕРёС‚Рѕ Рµ Р±РёР» СѓРІСЂРµРґРµРЅ. РђРєРѕ РєРѕСЂР°Р±СЉС‚ РЅРµ Рµ СѓС‡Р°СЃС‚РІР°Р» РІ Р±РёС‚РєРё РёР»Рё РїСЉРє РЅРёРєРѕРіР° РЅРµ Рµ Р±РёР» СѓРІСЂРµР¶РґР°РЅ, РІ СЂРµР·СѓР»С‚Р°С‚Р° РґР° СЃРµ РІРїРёСЃРІР° 0
 
-SELECT name, COUNT(battle) FROM ships LEFT JOIN outcomes ON name = ship AND result = 'damaged'
-GROUP BY name;
+SELECT name, COUNT(battle) FROM ships LEFT JOIN outcomes ON name = ship AND result = 'damaged' GROUP BY name;
 
--- (*) Намерете за всеки клас с поне 3 кораба броя на корабите от този клас, които са победили в битка
+-- (*) РќР°РјРµСЂРµС‚Рµ Р·Р° РІСЃРµРєРё РєР»Р°СЃ СЃ РїРѕРЅРµ 3 РєРѕСЂР°Р±Р° Р±СЂРѕСЏ РЅР° РєРѕСЂР°Р±РёС‚Рµ РѕС‚ С‚РѕР·Рё РєР»Р°СЃ, РєРѕРёС‚Рѕ СЃР° РїРѕР±РµРґРёР»Рё РІ Р±РёС‚РєР°
 
-SELECT classes.class, COUNT(name) FROM classes JOIN ships ON classes.class = ships.class 
-JOIN outcomes ON name = ship WHERE result = 'ok' AND classes.class IN 
-(SELECT classes.class FROM classes JOIN ships ON classes.class = ships.class 
-GROUP BY classes.class HAVING COUNT(*) >= 3) GROUP BY classes.class;
+SELECT classes.class, COUNT(name) FROM classes JOIN ships ON classes.class = ships.class JOIN outcomes ON name = ship WHERE result = 'ok' AND classes.class IN 
+(SELECT classes.class FROM classes JOIN ships ON classes.class = ships.class GROUP BY classes.class HAVING COUNT(*) >= 3) GROUP BY classes.class;
