@@ -10,9 +10,8 @@ BEGIN TRANSACTION;
 INSERT INTO moviestar VALUES('Bruce Willis', 'somewhere', 'M', '2020-01-01');
 
 GO
-CREATE TRIGGER bruce ON movie AFTER INSERT AS 
-INSERT INTO starsin(movietitle, movieyear, starname) SELECT title, year, 'Bruce Willis'
-FROM inserted WHERE title LIKE '%save%' OR title LIKE '%world%';
+CREATE TRIGGER bruce ON movie AFTER INSERT AS INSERT INTO starsin(movietitle, movieyear, starname) SELECT title, year, 'Bruce Willis' FROM inserted 
+WHERE title LIKE '%save%' OR title LIKE '%world%';
 GO
 
 INSERT INTO movie VALUES ('Save the world', 2022, 100, 'Y', 'Fox', 123);
@@ -48,10 +47,8 @@ DELETE TRIGGER onDeleteSetNull;
 GO
 CREATE TRIGGER addMovieStar ON starsin INSTEAD OF INSERT AS
 BEGIN
-	INSERT INTO moviestar(name) SELECT starname FROM inserted WHERE starname 
-	NOT IN (SELECT name FROM moviestar);
-	INSERT INTO movie(title, year) SELECT movietitle, movieyear FROM inserted WHERE
-	NOT EXISTS (SELECT * FROM movie WHERE title = movietitle AND year = movieyear);
+	INSERT INTO moviestar(name) SELECT starname FROM inserted WHERE starname NOT IN (SELECT name FROM moviestar);
+	INSERT INTO movie(title, year) SELECT movietitle, movieyear FROM inserted WHERE NOT EXISTS (SELECT * FROM movie WHERE title = movietitle AND year = movieyear);
 	INSERT INTO starsin SELECT * FROM inserted;
 END
 GO
