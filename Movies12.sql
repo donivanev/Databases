@@ -7,11 +7,6 @@ SELECT * FROM studio;
 
 BEGIN TRANSACTION;
 
-/*
-1. Добавете Брус Уилис в базата. Направете така, че при добавяне на филм, чието заглавие съдържа 
-   "save" или "world", Брус Уилис автоматично да бъде добавен като актьор, играл във филма.
-*/
-
 INSERT INTO moviestar VALUES('Bruce Willis', 'somewhere', 'M', '2020-01-01');
 
 GO
@@ -27,15 +22,6 @@ SELECT * FROM starsin;
 
 DROP TRIGGER bruce;
 
-/*
-2. Да се направи така, че да не е възможно средната стойност на Networth да е помалка от 500 000 
-   (ако при промени в таблицата MovieExec тази стойност стане по-малка от 500 000, промените да бъдат 
-   отхвърлени).
-*/
-
--- задачи с валидация ги правим с AFTER ТРИГЕРИ !!!
--- каскадна политика -> ако изтрием продуцент, се изтриват и неговите филми
-
 GO
 CREATE TRIGGER declineNetworth ON movieexec AFTER INSERT, UPDATE, DELETE AS
 IF(SELECT AVG(networth) FROM movieexec) < 500000
@@ -49,9 +35,7 @@ GO
 SELECT * FROM movieexec;
 DROP TRIGGER declineNetworth;
 
--- 3. MS SQL не поддържа ON DELETE SET NULL. Да се реализира с тригер за външния ключ Movie.producerc#.
-
--- INSTEAD OF !!! не може AFTER заради FK
+-- INSTEAD OF !!! Г­ГҐ Г¬Г®Г¦ГҐ AFTER Г§Г Г°Г Г¤ГЁ FK
 GO
 CREATE TRIGGER onDeleteSetNull ON movieexec INSTEAD OF DELETE AS
 BEGIN
@@ -61,12 +45,6 @@ END;
 GO
 
 DELETE TRIGGER onDeleteSetNull;
-
-/*
-4. При добавяне на нов запис в StarsIn, ако новият ред указва несъществуващ филм или актьор, да се 
-   добавят липсващите данни в съответната таблица (неизвестните данни да бъдат NULL).
-   Внимание: има външни ключове!
-*/
 
 GO
 CREATE TRIGGER addMovieStar ON starsin INSTEAD OF INSERT AS
