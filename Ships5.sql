@@ -3,39 +3,27 @@ SELECT * FROM ships;
 SELECT * FROM outcomes;
 SELECT * FROM battles;
 
--- 2.1 Напишете заявка, която извежда броя на класовете кораби
+-- 2.1 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ РёР·РІРµР¶РґР° Р±СЂРѕСЏ РЅР° РєР»Р°СЃРѕРІРµС‚Рµ РєРѕСЂР°Р±Рё
 
 SELECT COUNT(class) FROM classes;
 
-/*
-2.2 Напишете заявка, която извежда средния брой на оръдията (numguns) за всички кораби, 
-	пуснати на вода (т.е. изброени са в таблицата Ships)
-*/
+-- 2.2 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ РёР·РІРµР¶РґР° СЃСЂРµРґРЅРёСЏ Р±СЂРѕР№ РЅР° РѕСЂСЉРґРёСЏС‚Р° (numguns) Р·Р° РІСЃРёС‡РєРё РєРѕСЂР°Р±Рё, РїСѓСЃРЅР°С‚Рё РЅР° РІРѕРґР° (С‚.Рµ. РёР·Р±СЂРѕРµРЅРё СЃР° РІ С‚Р°Р±Р»РёС†Р°С‚Р° Ships)
 
 SELECT AVG(numguns) FROM ships JOIN classes ON ships.class = ships.class; 
 
-/*
-2.3 Напишете заявка, която извежда за всеки клас първата и последната година, в която кораб от 
-	съответния клас е пуснат на вода
-*/
+-- 2.3 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ РёР·РІРµР¶РґР° Р·Р° РІСЃРµРєРё РєР»Р°СЃ РїСЉСЂРІР°С‚Р° Рё РїРѕСЃР»РµРґРЅР°С‚Р° РіРѕРґРёРЅР°, РІ РєРѕСЏС‚Рѕ РєРѕСЂР°Р± РѕС‚ СЃСЉРѕС‚РІРµС‚РЅРёСЏ РєР»Р°СЃ Рµ РїСѓСЃРЅР°С‚ РЅР° РІРѕРґР°
 
 SELECT class, MIN(launched) AS FirstYear, MAX(launched) AS LastYear FROM ships GROUP BY class;
 
--- 2.4 Напишете заявка, която за всеки клас извежда броя на корабите, потънали в битка
+-- 2.4 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ Р·Р° РІСЃРµРєРё РєР»Р°СЃ РёР·РІРµР¶РґР° Р±СЂРѕСЏ РЅР° РєРѕСЂР°Р±РёС‚Рµ, РїРѕС‚СЉРЅР°Р»Рё РІ Р±РёС‚РєР°
 
-SELECT class, COUNT(name) as Count FROM ships JOIN outcomes ON ships.name = outcomes.ship 
-WHERE result = 'sunk' GROUP BY class;
+SELECT class, COUNT(name) as Count FROM ships JOIN outcomes ON ships.name = outcomes.ship WHERE result = 'sunk' GROUP BY class;
 
-/*
-2.5 Напишете заявка, която за всеки клас с над 4 пуснати на вода кораба извежда броя на корабите, 
-	потънали в битка
-*/
+-- 2.5 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ Р·Р° РІСЃРµРєРё РєР»Р°СЃ СЃ РЅР°Рґ 4 РїСѓСЃРЅР°С‚Рё РЅР° РІРѕРґР° РєРѕСЂР°Р±Р° РёР·РІРµР¶РґР° Р±СЂРѕСЏ РЅР° РєРѕСЂР°Р±РёС‚Рµ, РїРѕС‚СЉРЅР°Р»Рё РІ Р±РёС‚РєР°
 
-SELECT class, COUNT(name) FROM ships JOIN outcomes ON ships.name = outcomes.ship
-where result = 'sunk' AND class IN (SELECT class FROM ships GROUP BY class HAVING count(*) > 4)
-GROUP BY class;
+SELECT class, COUNT(name) FROM ships JOIN outcomes ON ships.name = outcomes.ship WHERE result = 'sunk' AND class IN 
+(SELECT class FROM ships GROUP BY class HAVING count(*) > 4) GROUP BY class;
 
-
--- 2.6 Напишете заявка, която извежда средното тегло на корабите (displacement) за всяка страна
+-- 2.6 РќР°РїРёС€РµС‚Рµ Р·Р°СЏРІРєР°, РєРѕСЏС‚Рѕ РёР·РІРµР¶РґР° СЃСЂРµРґРЅРѕС‚Рѕ С‚РµРіР»Рѕ РЅР° РєРѕСЂР°Р±РёС‚Рµ (displacement) Р·Р° РІСЃСЏРєР° СЃС‚СЂР°РЅР°
 
 SELECT AVG(DISPLACEMENT) as Avg FROM classes GROUP BY Country;
