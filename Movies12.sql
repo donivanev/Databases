@@ -35,7 +35,6 @@ GO
 SELECT * FROM movieexec;
 DROP TRIGGER declineNetworth;
 
--- INSTEAD OF !!! íå ìîæå AFTER çàðàäè FK
 GO
 CREATE TRIGGER onDeleteSetNull ON movieexec INSTEAD OF DELETE AS
 BEGIN
