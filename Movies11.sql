@@ -12,8 +12,7 @@ GO
 SELECT * FROM names_and_birthdates;
 
 GO
-CREATE VIEW stars_and_movies AS SELECT starname, COUNT(title) AS MoviesCount FROM starsin JOIN movie ON 
-movietitle = title AND movieyear = year GROUP BY starname; 
+CREATE VIEW stars_and_movies AS SELECT starname, COUNT(title) AS MoviesCount FROM starsin JOIN movie ON movietitle = title AND movieyear = year GROUP BY starname; 
 GO
 
 SELECT * FROM stars_and_movies;
