@@ -14,7 +14,5 @@ SELECT DISTINCT starname FROM movie JOIN starsin ON title = movietitle AND year 
 
 SELECT producerc#, title FROM movie WHERE producerc# = (SELECT producerc# FROM movie WHERE title = 'Star Wars');
 
--- 1.6 Íàïèøåòå çàÿâêà, êîÿòî èçâåæäà èìåíàòà íà àêòüîðèòå, êîèòî íå ñà ó÷àñòâàëè â íèòî åäèí ôèëì. 
-
 SELECT NAME FROM moviestar LEFT JOIN starsin ON name = starname WHERE starname IS NULL;
 --SELECT NAME FROM moviestar WHERE name NOT IN (SELECT starname FROM starsin);
